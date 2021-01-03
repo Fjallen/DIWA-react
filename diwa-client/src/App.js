@@ -1,23 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
-
+import { useEffect, useState } from 'react'
 function App() {
+  const [locationString, setLocationString] = useState("")
+  let options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
+  let success = (pos) => {
+    var crd = pos.coords;
+    setLocationString(`Your current position is: \nLatitude : ${crd.latitude}\nLongitude: ${crd.longitude}\nMore or less ${crd.accuracy} meters.`)
+  }
+  let error = (err) => {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(success, error, options);
+  }, [])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>
+        {locationString}
+      </p>
     </div>
   );
 }
